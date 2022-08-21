@@ -5,7 +5,7 @@ from schemas.schemas import User
 
 user = APIRouter()
 
-@user.post("/users", response_model=User, description="Create a new user")
+@user.post("/users", response_model=User)
 def create_user(user: User):
     new_user = {
         "username": user.username, 
@@ -15,7 +15,7 @@ def create_user(user: User):
     result = db.execute(users.insert().values(new_user))
     return db.execute(users.select().where(users.c.id == result.lastrowid)).first()
 
-@user.get("/users")
+@user.get("/users", response_model=list[User])
 def get_all_users():
     return db.execute(users.select()).fetchall()
 
